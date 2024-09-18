@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gerenciador de Estoque</title>
+    <style>
+        /* Estilo básico para a página */
+        body {
+            font-family: Arial, sans-serif; /* Define a fonte da página */
+        }
+        table {
+            border-collapse: collapse; /* Faz com que as bordas da tabela se fundam */
+        }
+        th, td {
+            border: 1px solid #ddd; /* Adiciona uma borda leve às células da tabela */
+            padding: 10px; /* Adiciona espaçamento interno às células da tabela */
+        }
+    </style>
+</head>
+<body>
+    <h1>Gerenciador de Estoque</h1>
+    
+    <!-- Formulário para adicionar novos produtos -->
+    <form id="add-product-form">
+        <label for="name">Nome</label>
+        <input type="text" id="name" name="name" required><br><br>
+        
+        <label for="quantity">Quantidade:</label>
+        <input type="number" id="quantity" name="quantity" required><br><br>
+        
+        <label for="description">Descrição:</label>
+        <textarea id="description" name="description" required></textarea><br><br>
+        
+        <button type="submit">Adicionar Produtos</button>
+    </form>
+    
+    <!-- Tabela para exibir produtos -->
+    <table id="product-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Quantidade</th>
+                <th>Descrição</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="product-table-body">
+            <!-- Esta tabela será preenchida com dados da API -->
+        </tbody>
+    </table>
+
+    <script>
+        const apiUrl = "http://localhost:5000/products"; // URL da API
+
+        // Função para atualizar a tabela com produtos
+        async function updateProductTable() {
+            try {
+                // Faz uma requisição GET para a API para obter todos os produtos
+                const response = await fetch(apiUrl);
+                const products = await response.json();
+                
+                const tableBody = document.getElementById("product-table-body");
+                tableBody.innerHTML = ""; // Limpa o conteúdo atual da tabela
+    
+                // Adiciona cada produto à tabela
+                products.forEach(product => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${product.id}</td>
+                        <td>${product.name}</td>
+                        <td>${product.quantity}</td>
+                        <td>${product.description}</td>
+                        <td>
+                            <button onclick="deleteProduct('${product.id}')">Deletar</button>
+                            <button onclick="updateProduct('${product.id}')">Atualizar</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching products:', error); // Exibe um erro se a requisição falhar
+            }
+        }
+    
+        // Função para adicionar um novo produto
+        document.getElementById("add-product-form").addEventListener("submit", async (event) => {
+            event.preventDefault(); // Impede o comportamento padrão de envio do formulário
+    
+            // Obtém os valores dos campos do formulário
+            const name = document.getElementById("name").value;
+            const quantity = document.getElementById("quantity").value;
+            const description = document.getElementById("description").value;
+    
+            try {
+                // Faz uma requisição POST para adicionar um novo produto
+                await fetch(apiUrl, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json" // Define o tipo de conteúdo como JSON
+                    },
+                    body: JSON.stringify({ name, quantity, description }) // Envia os dados do produto como JSON
+                });
+    
+                document.getElementById("add-product-form").reset(); // Limpa o formulário após o envio
+                updateProductTable(); // Atualiza a tabela para refletir o novo produto
+            } catch (error) {
+                console.error('Error adding product:', error); // Exibe um erro se a requisição falhar
+            }
+        });
+    
+        // Função para excluir um produto
+        async function deleteProduct(id) {
+            try {
+                // Faz uma requisição DELETE para remover o produto
+                await fetch(`${apiUrl}/${id}`, {
+                    method: "DELETE"
+                });
+    
+                updateProductTable(); // Atualiza a tabela após exclusão
+            } catch (error) {
+                console.error('Error deleting product:', error); // Exibe um erro se a requisição falhar
+            }
+        }
+    
+        // Função para atualizar a quantidade de um produto
+        async function updateProduct(id) {
+            const newQuantity = prompt('Enter new quantity:'); // Solicita a nova quantidade ao usuário
+            if (newQuantity !== null) { // Verifica se o usuário forneceu um valor
+                try {
+                    // Faz uma requisição PUT para atualizar a quantidade do produto
+                    await fetch(`${apiUrl}/${id}`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json" // Define o tipo de conteúdo como JSON
+                        },
+                        body: JSON.stringify({ quantity: newQuantity }) // Envia a nova quantidade como JSON
+                    });
+    
+                    updateProductTable(); // Atualiza a tabela após atualização
+                } catch (error) {
+                    console.error('Error updating product:', error); // Exibe um erro se a requisição falhar
+                }
+            }
+        }
+    
+        // Atualiza a tabela quando a página carrega
+        window.onload = updateProductTable;
+    </script>
+</body>
+</html>
