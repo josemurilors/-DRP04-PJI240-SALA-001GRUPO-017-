@@ -29,10 +29,7 @@ Para acessar a aplicação no navegador, é necessário usar esta URL: http://lo
 
 ## Integrantes do Grupo
 
-**João Batista Fonseca Costa** 
-**José Murilo Rodrigues Sabalo**
-**Jaqueline Nascimento Marques**
-**Adaumir Abrao dos Santos**
+**João Batista Fonseca Costa**, **José Murilo Rodrigues Sabalo**, **Jaqueline Nascimento Marques** e **Adaumir Abrao dos Santos**
 
 
 
