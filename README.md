@@ -27,4 +27,12 @@ Para executar o código, você pode simplesmente rodar usando o executador do **
 
 Para acessar a aplicação no navegador, é necessário usar esta URL: http://localhost:5000
 
+## Integrantes do Grupo
+
+**João Batista Fonseca Costa** 
+**José Murilo Rodrigues Sabalo**
+**Jaqueline Nascimento Marques**
+**Adaumir Abrao dos Santos**
+
+
 
