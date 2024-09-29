@@ -5,7 +5,7 @@
 
 ### Dependências:
 
-Primeiramente precisa instalar o MongoDB na sua platagforma a partir deste [link](https://www.mongodb.com/try/download/community) e deixa-lo na sua configuração de porta padrão, que neste caso seria a **27027**
+Primeiramente precisa instalar o MongoDB na sua platagforma a partir deste [link](https://www.mongodb.com/try/download/community) e deixa-lo na sua configuração de porta padrão, que neste caso seria a **27027**.
 
 Após isso será necessário o Python **3.12.x** e o Python pip para fazer as instalações dos pacotes.
 
@@ -24,3 +24,7 @@ pip install pymongo
 Para executar o código, você pode simplesmente rodar usando o executador do **Visual Studio Code** ou pode simplesmente rodar em um terminal:
 
 `python3 main.py`
+
+Para acessar a aplicação no navegador, é necessário usar esta URL: http://localhost:5000
+
+
