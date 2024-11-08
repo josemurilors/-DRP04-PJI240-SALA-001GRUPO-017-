@@ -1,18 +1,82 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerenciador de Estoque</title>
     <style>
         /* Estilo básico para a página */
         body {
-            font-family: Arial, sans-serif; /* Define a fonte da página */
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        label {
+            margin: 10px 0 5px;
+            display: block;
+        }
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
         }
         table {
-            border-collapse: collapse; /* Faz com que as bordas da tabela se fundam */
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         th, td {
-            border: 1px solid #ddd; /* Adiciona uma borda leve às células da tabela */
-            padding: 10px; /* Adiciona espaçamento interno às células da tabela */
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        @media (max-width: 600px) {
+            form, table {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -22,14 +86,14 @@
     <!-- Formulário para adicionar novos produtos -->
     <form id="add-product-form">
         <label for="name">Nome</label>
-        <input type="text" id="name" name="name" required><br><br>
-        
+        <input type="text" id="name" name="name" required>
+
         <label for="quantity">Quantidade:</label>
-        <input type="number" id="quantity" name="quantity" required><br><br>
-        
+        <input type="number" id="quantity" name="quantity" required>
+
         <label for="description">Descrição:</label>
-        <textarea id="description" name="description" required></textarea><br><br>
-        
+        <textarea id="description" name="description" rows="4" required></textarea>
+
         <button type="submit">Adicionar Produtos</button>
     </form>
     
@@ -52,17 +116,14 @@
     <script>
         const apiUrl = "http://localhost:5000/products"; // URL da API
 
-        // Função para atualizar a tabela com produtos
         async function updateProductTable() {
             try {
-                // Faz uma requisição GET para a API para obter todos os produtos
                 const response = await fetch(apiUrl);
                 const products = await response.json();
                 
                 const tableBody = document.getElementById("product-table-body");
                 tableBody.innerHTML = ""; // Limpa o conteúdo atual da tabela
-    
-                // Adiciona cada produto à tabela
+
                 products.forEach(product => {
                     const row = document.createElement("tr");
                     row.innerHTML = `
@@ -78,72 +139,60 @@
                     tableBody.appendChild(row);
                 });
             } catch (error) {
-                console.error('Error fetching products:', error); // Exibe um erro se a requisição falhar
+                console.error('Error fetching products:', error);
             }
         }
     
-        // Função para adicionar um novo produto
         document.getElementById("add-product-form").addEventListener("submit", async (event) => {
-            event.preventDefault(); // Impede o comportamento padrão de envio do formulário
-    
-            // Obtém os valores dos campos do formulário
+            event.preventDefault();
             const name = document.getElementById("name").value;
             const quantity = document.getElementById("quantity").value;
             const description = document.getElementById("description").value;
-    
+
             try {
-                // Faz uma requisição POST para adicionar um novo produto
                 await fetch(apiUrl, {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/json" // Define o tipo de conteúdo como JSON
+                        "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ name, quantity, description }) // Envia os dados do produto como JSON
+                    body: JSON.stringify({ name, quantity, description })
                 });
-    
-                document.getElementById("add-product-form").reset(); // Limpa o formulário após o envio
-                updateProductTable(); // Atualiza a tabela para refletir o novo produto
+                document.getElementById("add-product-form").reset();
+                updateProductTable();
             } catch (error) {
-                console.error('Error adding product:', error); // Exibe um erro se a requisição falhar
+                console.error('Error adding product:', error);
             }
         });
     
-        // Função para excluir um produto
         async function deleteProduct(id) {
             try {
-                // Faz uma requisição DELETE para remover o produto
                 await fetch(`${apiUrl}/${id}`, {
                     method: "DELETE"
                 });
-    
-                updateProductTable(); // Atualiza a tabela após exclusão
+                updateProductTable();
             } catch (error) {
-                console.error('Error deleting product:', error); // Exibe um erro se a requisição falhar
+                console.error('Error deleting product:', error);
             }
         }
     
-        // Função para atualizar a quantidade de um produto
         async function updateProduct(id) {
-            const newQuantity = prompt('Enter new quantity:'); // Solicita a nova quantidade ao usuário
-            if (newQuantity !== null) { // Verifica se o usuário forneceu um valor
+            const newQuantity = prompt('Digite a nova quantidade:');
+            if (newQuantity !== null) {
                 try {
-                    // Faz uma requisição PUT para atualizar a quantidade do produto
                     await fetch(`${apiUrl}/${id}`, {
                         method: "PUT",
                         headers: {
-                            "Content-Type": "application/json" // Define o tipo de conteúdo como JSON
+                            "Content-Type": "application/json"
                         },
-                        body: JSON.stringify({ quantity: newQuantity }) // Envia a nova quantidade como JSON
+                        body: JSON.stringify({ quantity: newQuantity })
                     });
-    
-                    updateProductTable(); // Atualiza a tabela após atualização
+                    updateProductTable();
                 } catch (error) {
-                    console.error('Error updating product:', error); // Exibe um erro se a requisição falhar
+                    console.error('Error updating product:', error);
                 }
             }
         }
     
-        // Atualiza a tabela quando a página carrega
         window.onload = updateProductTable;
     </script>
 </body>

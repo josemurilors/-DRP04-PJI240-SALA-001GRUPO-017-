@@ -15,22 +15,22 @@ app.config["MONGO_URI"] = "mongodb://localhost:27017/estoque"
 # Estabelece conexão com o MongoDB usando a URI definida
 client = MongoClient(app.config["MONGO_URI"])
 
-# Acessa o banco de dados 'estoque' no cliente MongoDB
+# Acessa o banco de dados estoque no cliente MongoDB
 mongo = client.estoque
 
 # Define a rota para a página inicial da aplicação
 @app.route("/")
 def index():
-    # Renderiza o template 'stock-manager.html' na rota raiz
+    
     return render_template("stock-manager.html")
 
 # Define a rota para obter todos os produtos
 @app.route("/products", methods=["GET"])
 def get_all_products():
-    # Busca todos os produtos na coleção 'products' do banco de dados
+    # Busca todos os produtos na coleção products do banco de dados
     products = mongo.products.find()
     
-    # Retorna os produtos em formato JSON com campos 'id', 'name', 'quantity' e 'description'
+    # Retorna os produtos em formato JSON com campos id, name, quantity e description
     return jsonify([{"id": str(product["_id"]), "name": product["name"], "quantity": product["quantity"], "description": product["description"]} for product in products])
 
 # Define a rota para adicionar um novo produto
@@ -42,7 +42,7 @@ def add_product():
     # Cria um dicionário com os dados do produto
     product = {"name": data["name"], "quantity": data["quantity"], "description": data["description"]}
     
-    # Insere o novo produto na coleção 'products'
+    # Insere o novo produto na coleção products
     mongo.products.insert_one(product)
     
     # Retorna uma mensagem de sucesso em formato JSON
@@ -51,7 +51,7 @@ def add_product():
 # Define a rota para obter um produto específico por ID
 @app.route("/products/<id>", methods=["GET"])
 def get_product(id):
-    # Busca o produto com o ID fornecido na coleção 'products'
+    # Busca o produto com o ID fornecido na coleção products
     product = mongo.products.find_one({"_id": ObjectId(id)})
     
     if product:
@@ -64,22 +64,22 @@ def get_product(id):
 # Define a rota para atualizar um produto específico por ID
 @app.route("/products/<id>", methods=["PUT"])
 def update_product(id):
-    # Obtém os dados da requisição em formato JSON
+  
     data = request.get_json()
     
-    # Atualiza a quantidade do produto com o ID fornecido na coleção 'products'
+    # Atualiza a quantidade do produto com o ID fornecido na coleção products
     mongo.products.update_one({"_id": ObjectId(id)}, {"$set": {"quantity": data["quantity"]}})
     
-    # Retorna uma mensagem de sucesso em formato JSON
+   
     return jsonify({"message": "Product updated successfully"})
 
 # Define a rota para deletar um produto específico por ID
 @app.route("/products/<id>", methods=["DELETE"])
 def delete_product(id):
-    # Remove o produto com o ID fornecido da coleção 'products'
+    # Remove o produto com o ID fornecido da coleção products
     mongo.products.delete_one({"_id": ObjectId(id)})
     
-    # Retorna uma mensagem de sucesso em formato JSON
+   
     return jsonify({"message": "Product deleted successfully"})
 
 # Inicia a aplicação Flask se este script for executado diretamente
