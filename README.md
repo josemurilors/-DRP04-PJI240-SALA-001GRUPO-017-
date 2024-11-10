@@ -1,13 +1,16 @@
 # Controle de Estoque - Projeto Integrador UNIVESP
 ## DRP04-PJI240-SALA-001GRUPO-017
+### Apresentação
+Essa seria a versão de apresentação do projeto, porém ainda tem muito a se trabalhar com ele. A ideia do software seria o microempreendedor gerenciasse o seu negócio de forma simples e prática. 
 
-## Ainda está em desenvolvimento.
+![image](https://github.com/user-attachments/assets/3c61dd3c-736f-4718-be09-9030bad1597b)
+
 
 ### Dependências:
 
 Primeiramente precisa instalar o MongoDB na sua platagforma a partir deste [link](https://www.mongodb.com/try/download/community) e deixa-lo na sua configuração de porta padrão, que neste caso seria a **27027**.
 
-Após isso será necessário o Python **3.12.x** e o Python pip para fazer as instalações dos pacotes.
+Após isso será necessário o Python **3.12.x** (Lembrar de colocar "Add python.exe to PATH") e o Python pip para fazer as instalações dos pacotes.
 
 Usando o pip no terminal, será necessário instalar esses pacotes com estes comandos:
 
